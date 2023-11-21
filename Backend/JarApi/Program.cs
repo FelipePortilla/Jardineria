@@ -1,40 +1,72 @@
-using persistense.Data;
-using Microsoft.AspNetCore.Builder;
+using System.Configuration;
+using System.Reflection;
+using JarApi.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using persistense.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuración de la cadena de conexión
-builder.Configuration.AddJsonFile("appsettings.json");
-
-// Add services to the container.
+// Agrega servicios al contenedor.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
+builder.Services.ConfigureCors();
+builder.Services.AddAplicacionServices();
+builder.Services.AddJwt(builder.Configuration);
 
-// Configuración del DbContext
 builder.Services.AddDbContext<JardineriaContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("NombreDeTuCadenaDeConexion"));
+    var connectionString = builder.Configuration.GetConnectionString("MyConnectionString");
+    var databaseProvider = builder.Configuration.GetValue<string>("DatabaseProvider");
+
+    if (databaseProvider == "ConexMysql")
+    {
+        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+    }
+    else if (databaseProvider == "ConexSqlServer")
+    {
+        options.UseSqlServer(connectionString);
+    }
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configura el pipeline de solicitudes HTTP.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"));
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
 
+// Configuración CORS
+app.UseCors("AllowOrigin");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+
+    try
+    {
+        var context = services.GetRequiredService<JardineriaContext>();
+        await context.Database.MigrateAsync();
+    }
+    catch (Exception ex)
+    {
+        var _logger = loggerFactory.CreateLogger<Program>();
+        _logger.LogError(ex, "Ocurrió un error durante la migración");
+    }
+}
 
 app.Run();

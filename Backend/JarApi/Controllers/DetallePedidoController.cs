@@ -37,7 +37,7 @@ namespace JarApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<DetallePedidoDto>> Get(int id)
         {
-            var detallePedido = await _unitOfWork.DetallePedidos.GetByIdAsync(id);
+            var detallePedido = await _unitOfWork.DetallePedidos.GetByIdInt(id);
             if (detallePedido == null)
                 return NotFound();
 
@@ -73,7 +73,7 @@ namespace JarApi.Controllers
             if (detallePedidoDto == null)
                 return NotFound();
 
-            var detallePedido = await _unitOfWork.DetallePedidos.GetByIdAsync(id);
+            var detallePedido = await _unitOfWork.DetallePedidos.GetByIdInt(id);
             if (detallePedido == null)
                 return NotFound();
 
@@ -89,7 +89,7 @@ namespace JarApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            var detallePedido = await _unitOfWork.DetallePedidos.GetByIdAsync(id);
+            var detallePedido = await _unitOfWork.DetallePedidos.GetByIdInt(id);
             if (detallePedido == null)
                 return NotFound();
 

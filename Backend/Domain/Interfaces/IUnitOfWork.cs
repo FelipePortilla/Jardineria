@@ -7,6 +7,8 @@ namespace Domain.Interfaces
 {
     public interface IUnitOfWork
     {
+        IRolRepository Roles {get;}
+        IUserRepository Users { get; }
         ICliente ? Clientes{get;}
         IDetallePedido ?DetallePedidos{get;}
         IEmpleado ?Empleados{get;}

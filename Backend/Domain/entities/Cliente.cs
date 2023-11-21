@@ -5,11 +5,6 @@ namespace Domain.entities;
 
 public partial class Cliente:BaseEntity
 {
-    public Cliente()
-    {
-        CodigoCliente=id;
-    }
-
     public int CodigoCliente { get; set; }
 
     public string NombreCliente { get; set; } = null!;
@@ -43,6 +38,4 @@ public partial class Cliente:BaseEntity
     public virtual ICollection<Pago> Pagos { get; set; } = new List<Pago>();
 
     public virtual ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
-
-    
 }

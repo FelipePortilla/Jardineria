@@ -5,11 +5,6 @@ namespace Domain.entities;
 
 public partial class DetallePedido:BaseEntity
 {
-    public DetallePedido()
-    {
-        CodigoPedido=id;
-    }
-
     public int CodigoPedido { get; set; }
 
     public string CodigoProducto { get; set; } = null!;

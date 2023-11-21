@@ -1,88 +1,105 @@
-using System.Collections;
-using persistense.Data;
-using Domain.entities;
-using Microsoft.AspNetCore.Mvc;
-using ApiApolo.Controllers;
-using Domain.Interfaces;
 using AutoMapper;
+using Domain.entities;
+using Domain.Interfaces;
 using JarApi.Dtos;
+using Microsoft.AspNetCore.Mvc;
 
-namespace JarApi.Controllers;
-public class ClienteController : BaseController
+[ApiController]
+[Route("api/clientes")]
+public class ClienteController : ControllerBase
 {
-    private readonly IUnitOfWork _unitofwork;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+
     public ClienteController(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _unitofwork = unitOfWork;
-        _mapper = mapper;
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
+
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<IEnumerable<ClienteDto>>> get()
+    public async Task<ActionResult<IEnumerable<ClienteDto>>> Get()
     {
-        var clientes = await _unitofwork.Clientes.GetAllAsync();
-
-        return _mapper.Map<List<ClienteDto>>(clientes);
+        var clientes = await _unitOfWork.Clientes.GetAllAsync();
+        return Ok(_mapper.Map<List<ClienteDto>>(clientes));
     }
+
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ClienteDto>> Get(int id)
+    public async Task<ActionResult<ClienteDto>> Get(string id)
     {
-        var cliente = await _unitofwork.Clientes.GetByIdAsync(id);
+        var cliente = await _unitOfWork.Clientes.GetByIdSTring(id);
         if (cliente == null)
             return NotFound();
 
-        return _mapper.Map<ClienteDto>(cliente);
+        return Ok(_mapper.Map<ClienteDto>(cliente));
     }
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Cliente>> Post(ClienteDto clienteDto)
+    [HttpGet("spanishClients")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<ClienteOnlyName>>> GetSpanishClientsNames()
     {
-        var cliente = _mapper.Map<Cliente>(clienteDto);
-        _unitofwork.Clientes.Add(cliente);
-        await _unitofwork.SaveAsync();
-        if (cliente == null)
+        try
         {
-            return BadRequest();
+            var result = await _unitOfWork.Clientes.GetNameSpainCoustumers();
+
+            return Ok(result);
         }
-        clienteDto.CodigoCliente = cliente.CodigoCliente;
-        return CreatedAtAction(nameof(Post), new { id = clienteDto.CodigoCliente }, clienteDto);
+        catch (Exception ex)
+        {
+            // Manejar errores según tus necesidades
+            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+        }
     }
-[HttpPut("{id}")]
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ClienteDto>> Post(ClienteDto clienteDto)
+        {
+            var cliente = _mapper.Map<Cliente>(clienteDto);
+            _unitOfWork.Clientes.Add(cliente);
+            await _unitOfWork.SaveAsync();
+
+            clienteDto.CodigoCliente = cliente.CodigoCliente;
+            return CreatedAtAction(nameof(Get), new { id = clienteDto.CodigoCliente }, clienteDto);
+        }
+
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ClienteDto>> Put(int id, [FromBody] ClienteDto clienteDto)
+        public async Task<ActionResult<ClienteDto>> Put(string id, [FromBody] ClienteDto clienteDto)
         {
             if (clienteDto == null)
-                return NotFound();
+                return BadRequest();
 
-            var cliente = await _unitofwork.Clientes.GetByIdAsync(id);
+            var cliente = await _unitOfWork.Clientes.GetByIdSTring(id);
             if (cliente == null)
                 return NotFound();
 
-            var cliente1 = _mapper.Map<Cliente>(clienteDto);
-            _unitofwork.Clientes.Update(cliente1);
-            await _unitofwork.SaveAsync();
-            return clienteDto;
+            _mapper.Map(clienteDto, cliente);
+            _unitOfWork.Clientes.Update(cliente);
+            await _unitOfWork.SaveAsync();
+
+            return Ok(clienteDto);
         }
+
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var cliente = await _unitofwork.Clientes.GetByIdAsync(id);
+            var cliente = await _unitOfWork.Clientes.GetByIdSTring(id);
             if (cliente == null)
                 return NotFound();
 
-            _unitofwork.Clientes.Remove(cliente);
-            await _unitofwork.SaveAsync();
+            _unitOfWork.Clientes.Remove(cliente);
+            await _unitOfWork.SaveAsync();
 
             return NoContent();
         }
-}
+    }

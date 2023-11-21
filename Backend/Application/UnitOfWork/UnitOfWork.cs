@@ -22,9 +22,34 @@ namespace Application.UnitOfWork
         private IPedido _pedidos;
         private IProducto _productos;
 
+        private IRolRepository _roles;
+        private IUserRepository _users;
         public UnitOfWork(JardineriaContext context)
         {
             _context = context;
+        }
+        public IRolRepository Roles
+        {
+            get
+            {
+                if (_roles == null)
+                {
+                    _roles = new RolRepository(_context);
+                }
+                return _roles;
+            }
+        }
+
+        public IUserRepository Users
+        {
+            get
+            {
+                if (_users == null)
+                {
+                    _users = new UserRepository(_context);
+                }
+                return _users;
+            }
         }
 
         public ICliente Clientes

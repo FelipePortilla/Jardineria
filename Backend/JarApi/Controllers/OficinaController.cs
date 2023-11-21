@@ -52,9 +52,9 @@ namespace JarApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<OficinaDto>> Get(int id)
+        public async Task<ActionResult<OficinaDto>> Get(string id)
         {
-            var oficina = await _unitOfWork.Oficinas.GetByIdAsync(id);
+            var oficina = await _unitOfWork.Oficinas.GetByIdSTring(id);
             if (oficina == null)
                 return NotFound();
 
@@ -84,12 +84,12 @@ namespace JarApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<OficinaDto>> Put(int id, [FromBody] OficinaDto oficinaDto)
+        public async Task<ActionResult<OficinaDto>> Put(string id, [FromBody] OficinaDto oficinaDto)
         {
             if (oficinaDto == null)
                 return NotFound();
 
-            var oficina = await _unitOfWork.Oficinas.GetByIdAsync(id);
+            var oficina = await _unitOfWork.Oficinas.GetByIdSTring(id);
             if (oficina == null)
                 return NotFound();
 
@@ -103,9 +103,9 @@ namespace JarApi.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var oficina = await _unitOfWork.Oficinas.GetByIdAsync(id);
+            var oficina = await _unitOfWork.Oficinas.GetByIdSTring(id);
             if (oficina == null)
                 return NotFound();
 

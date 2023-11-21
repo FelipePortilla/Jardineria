@@ -30,6 +30,83 @@ namespace JarApi.Controllers
 
             return _mapper.Map<List<PedidoDto>>(pedidos);
         }
+        [HttpGet("pedidosNoEntregadosATiempo")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetPedidosNoEntregadosATiempo()
+        {
+            try
+            {
+                var pedidos = await _unitOfWork.Pedidos.GetPedidosNoEntregadosATiempo();
+                return Ok(pedidos);
+            }
+            catch (Exception ex)
+            {
+                // Log y manejo de errores
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
+        [HttpGet("PedidosFechaEntregaDosDiasAntes")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetPedidosFechaEntregaDosDiasAntes()
+        {
+            try
+            {
+                var pedidos = await _unitOfWork.Pedidos.GetPedidosFechaEntregaDosDiasAntes();
+                return Ok(pedidos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+        [HttpGet("Pagos2008Paypal")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetPagos2008Paypal()
+        {
+            try
+            {
+                var pagos = await _unitOfWork.Pedidos.GetPagos2008Paypal();
+                return Ok(pagos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+        [HttpGet("PedidosRechazados2009")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetPedidosRechazados2009()
+        {
+            try
+            {
+                var pedidos = await _unitOfWork.Pedidos.GetPedidosRechazados2009();
+                return Ok(pedidos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+        [HttpGet("PedidosEntregados2009")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetPedidosEntregados2009()
+        {
+            try
+            {
+                var pedidos = await _unitOfWork.Pedidos.GetPedidosEntregados2009();
+                return Ok(pedidos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -37,7 +114,7 @@ namespace JarApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PedidoDto>> Get(int id)
         {
-            var pedido = await _unitOfWork.Pedidos.GetByIdAsync(id);
+            var pedido = await _unitOfWork.Pedidos.GetByIdInt(id);
             if (pedido == null)
                 return NotFound();
 
@@ -72,7 +149,7 @@ namespace JarApi.Controllers
             if (pedidoDto == null)
                 return NotFound();
 
-            var pedido = await _unitOfWork.Pedidos.GetByIdAsync(id);
+            var pedido = await _unitOfWork.Pedidos.GetByIdInt(id);
             if (pedido == null)
                 return NotFound();
 
@@ -88,7 +165,7 @@ namespace JarApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            var pedido = await _unitOfWork.Pedidos.GetByIdAsync(id);
+            var pedido = await _unitOfWork.Pedidos.GetByIdInt(id);
             if (pedido == null)
                 return NotFound();
 

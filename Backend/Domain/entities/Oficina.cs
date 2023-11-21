@@ -5,11 +5,6 @@ namespace Domain.entities;
 
 public partial class Oficina:BaseEntity
 {
-    public Oficina()
-    {
-        CodigoOficina=Convert.ToString(id);
-    }
-
     public string CodigoOficina { get; set; } = null!;
 
     public string Ciudad { get; set; } = null!;

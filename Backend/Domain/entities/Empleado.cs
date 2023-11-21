@@ -5,11 +5,6 @@ namespace Domain.entities;
 
 public partial class Empleado:BaseEntity
 {
-    public Empleado()
-    {
-        CodigoEmpleado=id;
-    }
-
     public int CodigoEmpleado { get; set; }
 
     public string Nombre { get; set; } = null!;

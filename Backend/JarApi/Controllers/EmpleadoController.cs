@@ -30,6 +30,22 @@ namespace JarApi.Controllers
 
             return _mapper.Map<List<EmpleadoDto>>(empleados);
         }
+        [HttpGet("jefeCode7")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<EmpNPPEDto>>> GetEmployeesWithJefeCode7()
+        {
+            try
+            {
+                var empleados = await _unitOfWork.Empleados.GetEmployedTO7();
+                return Ok(empleados);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it appropriately.
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -37,7 +53,7 @@ namespace JarApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<EmpleadoDto>> Get(int id)
         {
-            var empleado = await _unitOfWork.Empleados.GetByIdAsync(id);
+            var empleado = await _unitOfWork.Empleados.GetByIdInt(id);
             if (empleado == null)
                 return NotFound();
 
@@ -72,7 +88,7 @@ namespace JarApi.Controllers
             if (empleadoDto == null)
                 return NotFound();
 
-            var empleado = await _unitOfWork.Empleados.GetByIdAsync(id);
+            var empleado = await _unitOfWork.Empleados.GetByIdInt(id);
             if (empleado == null)
                 return NotFound();
 
@@ -88,7 +104,7 @@ namespace JarApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            var empleado = await _unitOfWork.Empleados.GetByIdAsync(id);
+            var empleado = await _unitOfWork.Empleados.GetByIdInt(id);
             if (empleado == null)
                 return NotFound();
 

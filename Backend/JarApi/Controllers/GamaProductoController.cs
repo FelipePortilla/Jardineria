@@ -35,9 +35,9 @@ namespace JarApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<GamaProductoDto>> Get(int id)
+        public async Task<ActionResult<GamaProductoDto>> Get(string id)
         {
-            var gamaProducto = await _unitOfWork.GamaProductos.GetByIdAsync(id);
+            var gamaProducto = await _unitOfWork.GamaProductos.GetByIdSTring(id);
             if (gamaProducto == null)
                 return NotFound();
 
@@ -67,12 +67,12 @@ namespace JarApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<GamaProductoDto>> Put(int id, [FromBody] GamaProductoDto gamaProductoDto)
+        public async Task<ActionResult<GamaProductoDto>> Put(string id, [FromBody] GamaProductoDto gamaProductoDto)
         {
             if (gamaProductoDto == null)
                 return NotFound();
 
-            var gamaProducto = await _unitOfWork.GamaProductos.GetByIdAsync(id);
+            var gamaProducto = await _unitOfWork.GamaProductos.GetByIdSTring(id);
             if (gamaProducto == null)
                 return NotFound();
 
@@ -86,9 +86,9 @@ namespace JarApi.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var gamaProducto = await _unitOfWork.GamaProductos.GetByIdAsync(id);
+            var gamaProducto = await _unitOfWork.GamaProductos.GetByIdSTring(id);
             if (gamaProducto == null)
                 return NotFound();
 
