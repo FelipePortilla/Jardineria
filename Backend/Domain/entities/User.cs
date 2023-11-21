@@ -13,7 +13,7 @@ public class User:BaseEntity
 
     public string Password { get; set; } = null!;
 
-    public virtual ICollection<RefreshToken> Refreshtokens { get; set; } = new List<RefreshToken>();
+    public virtual ICollection<Refreshtoken> Refreshtokens { get; set; } = new List<Refreshtoken>();
 
     public virtual ICollection<Rol> Rols { get; set; } = new List<Rol>();
 }

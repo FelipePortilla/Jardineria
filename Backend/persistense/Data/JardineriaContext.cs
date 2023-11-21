@@ -21,9 +21,6 @@ public partial class JardineriaContext : DbContext
     public virtual DbSet<DetallePedido> DetallePedidos { get; set; }
 
     public virtual DbSet<Efmigrationshistory> Efmigrationshistories { get; set; }
-
-    public virtual DbSet<Efmigrationshistory> Efmigrationshistories { get; set; }
-
     public virtual DbSet<Empleado> Empleados { get; set; }
 
     public virtual DbSet<GamaProducto> GamaProductos { get; set; }
@@ -38,7 +35,7 @@ public partial class JardineriaContext : DbContext
 
     public virtual DbSet<Producto> Productos { get; set; }
 
-    public virtual DbSet<RefreshToken> Refreshtokens { get; set; }
+    public virtual DbSet<Refreshtoken> Refreshtokens { get; set; }
 
     public virtual DbSet<Rol> Rols { get; set; }
 
@@ -319,9 +316,9 @@ public partial class JardineriaContext : DbContext
                 .HasConstraintName("producto_ibfk_1");
         });
 
-        modelBuilder.Entity<RefreshToken>(entity =>
+        modelBuilder.Entity<Refreshtoken>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.ToTable("refreshtokens");
 
