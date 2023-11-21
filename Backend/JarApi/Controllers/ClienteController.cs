@@ -9,8 +9,8 @@ using AutoMapper;
 using Domain.entities;
 using ApiApolo.Controllers;
 
-namespace JarApi.Controllers
-{
+namespace JarApi.Controllers;
+
     public class ClienteController : BaseController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -50,8 +50,8 @@ namespace JarApi.Controllers
     public async Task<ActionResult<Cliente>> Post(ClienteDto clienteDto)
     {
         var cliente = _mapper.Map<Cliente>(clienteDto);
-        _unitofwork.Clientes.Add(cliente);
-        await _unitofwork.SaveAsync();
+        _unitOfWork.Clientes.Add(cliente);
+        await _unitOfWork.SaveAsync();
         if (cliente == null)
         {
             return BadRequest();
@@ -68,13 +68,13 @@ namespace JarApi.Controllers
             if (clienteDto == null)
                 return NotFound();
 
-            var cliente = await _unitofwork.Clientes.GetByIdAsync(id);
+            var cliente = await _unitOfWork.Clientes.GetByIdInt(id);
             if (cliente == null)
                 return NotFound();
 
             var cliente1 = _mapper.Map<Cliente>(clienteDto);
-            _unitofwork.Clientes.Update(cliente1);
-            await _unitofwork.SaveAsync();
+            _unitOfWork.Clientes.Update(cliente1);
+            await _unitOfWork.SaveAsync();
             return clienteDto;
         }
         [HttpDelete("{id}")]
@@ -82,12 +82,12 @@ namespace JarApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            var cliente = await _unitofwork.Clientes.GetByIdAsync(id);
+            var cliente = await _unitOfWork.Clientes.GetByIdInt(id);
             if (cliente == null)
                 return NotFound();
 
-            _unitofwork.Clientes.Remove(cliente);
-            await _unitofwork.SaveAsync();
+            _unitOfWork.Clientes.Remove(cliente);
+            await _unitOfWork.SaveAsync();
 
             return NoContent();
         }
