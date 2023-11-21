@@ -5,11 +5,6 @@ namespace Domain.entities;
 
 public partial class Producto:BaseEntity
 {
-    public Producto()
-    {
-        CodigoProducto=Convert.ToString(id);
-    }
-
     public string CodigoProducto { get; set; } = null!;
 
     public string Nombre { get; set; } = null!;

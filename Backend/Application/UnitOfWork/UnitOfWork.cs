@@ -21,10 +21,46 @@ namespace Application.UnitOfWork
         private IPago _pagos;
         private IPedido _pedidos;
         private IProducto _productos;
-
+        private IRolRepository _roles;
+        private IUserRepository _users;
+        private IJefe _jefes;
         public UnitOfWork(JardineriaContext context)
         {
             _context = context;
+        }
+        public IRolRepository Roles
+        {
+            get
+            {
+                if (_roles == null)
+                {
+                    _roles = new RolRepository(_context);
+                }
+                return _roles;
+            }
+        }
+        public IJefe Jefes
+        {
+            get
+            {
+                if(_jefes==null)
+                {
+                    _jefes = new JefeRepository(_context);
+                }
+                return _jefes;
+            }
+        }
+
+        public IUserRepository Users
+        {
+            get
+            {
+                if (_users == null)
+                {
+                    _users = new UserRepository(_context);
+                }
+                return _users;
+            }
         }
 
         public ICliente Clientes
@@ -98,6 +134,7 @@ namespace Application.UnitOfWork
                 return _productos ??= new ProductoRepository(_context);
             }
         }
+
 
         public async Task<int> SaveAsync()
         {

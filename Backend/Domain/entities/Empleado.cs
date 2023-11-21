@@ -5,11 +5,6 @@ namespace Domain.entities;
 
 public partial class Empleado:BaseEntity
 {
-    public Empleado()
-    {
-        CodigoEmpleado=id;
-    }
-
     public int CodigoEmpleado { get; set; }
 
     public string Nombre { get; set; } = null!;
@@ -28,11 +23,7 @@ public partial class Empleado:BaseEntity
 
     public string? Puesto { get; set; }
 
-    public virtual ICollection<Cliente> Clientes { get; set; } = new List<Cliente>();
-
     public virtual Empleado? CodigoJefeNavigation { get; set; }
-
-    public virtual Oficina CodigoOficinaNavigation { get; set; } = null!;
 
     public virtual ICollection<Empleado> InverseCodigoJefeNavigation { get; set; } = new List<Empleado>();
 }

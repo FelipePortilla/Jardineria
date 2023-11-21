@@ -22,6 +22,8 @@ namespace JarApi.Profiles
             CreateMap<Pago, PagoDto>().ReverseMap();
             CreateMap<Pedido, PedidoDto>().ReverseMap();
             CreateMap<Producto, ProductoDto>().ReverseMap();
+            CreateMap<Jefe, JefeDto>().ReverseMap();
+
             
 
         }

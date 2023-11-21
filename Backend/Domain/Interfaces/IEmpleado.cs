@@ -6,8 +6,9 @@ using Domain.entities;
 
 namespace Domain.Interfaces
 {
-    public interface IEmpleado:IGenericRepository<Empleado>
+    public interface IEmpleado : IGenericRepository<Empleado>
     {
-        
+         Task<IEnumerable<Empleado>> GetEmployedTO7();
+
     }
 }

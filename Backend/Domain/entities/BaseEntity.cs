@@ -7,6 +7,6 @@ namespace Domain.entities
 {
     public class BaseEntity
     {
-        public int id { get; set; }
+
     }
 }

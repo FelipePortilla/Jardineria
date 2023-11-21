@@ -6,8 +6,9 @@ using Domain.entities;
 
 namespace Domain.Interfaces
 {
-    public interface IPago:IGenericRepository<Pago>
+    public interface IPago : IGenericRepository<Pago>
     {
-        
+        Task<IEnumerable<int>> GetClientesConPagosEn2008();
+        Task<IEnumerable<string>> GetFormasPagoUnicas();
     }
 }

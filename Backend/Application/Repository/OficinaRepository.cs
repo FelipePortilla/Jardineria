@@ -9,6 +9,7 @@ using persistense.Data;
 
 namespace Application.Repository
 {
+
     public class OficinaRepository : GenericRepository<Oficina>, IOficina
     {
         private readonly JardineriaContext _context;
@@ -19,7 +20,6 @@ namespace Application.Repository
         }
     public async Task<IEnumerable<Oficina>> GetPOFCodeAndCity()
     {
-        // Utilizando LINQ para obtener el listado directamente
         var listado = await _context.Oficinas
             .Select(oficina => new Oficina { CodigoOficina = oficina.CodigoOficina, Ciudad = oficina.Ciudad })
             .ToListAsync();

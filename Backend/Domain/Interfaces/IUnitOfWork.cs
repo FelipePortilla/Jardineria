@@ -7,6 +7,8 @@ namespace Domain.Interfaces
 {
     public interface IUnitOfWork
     {
+        IRolRepository Roles {get;}
+        IUserRepository Users { get; }
         ICliente ? Clientes{get;}
         IDetallePedido ?DetallePedidos{get;}
         IEmpleado ?Empleados{get;}
@@ -15,6 +17,7 @@ namespace Domain.Interfaces
         IPago ?Pagos{get;}
         IPedido ?Pedidos {get;}
         IProducto Productos {get;}
+        IJefe Jefes {get;}
         Task<int> SaveAsync();
     }
 }

@@ -1,88 +1,69 @@
-using System.Collections;
-using persistense.Data;
-using Domain.entities;
-using Microsoft.AspNetCore.Mvc;
-using ApiApolo.Controllers;
+
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Domain.Interfaces;
-using AutoMapper;
 using JarApi.Dtos;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
+using Domain.entities;
+using ApiApolo.Controllers;
 
-namespace JarApi.Controllers;
-public class ClienteController : BaseController
+namespace JarApi.Controllers
 {
-    private readonly IUnitOfWork _unitofwork;
-    private readonly IMapper _mapper;
-    public ClienteController(IUnitOfWork unitOfWork, IMapper mapper)
+    public class ClienteController : BaseController
     {
-        _unitofwork = unitOfWork;
-        _mapper = mapper;
-    }
-    [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<IEnumerable<ClienteDto>>> get()
-    {
-        var clientes = await _unitofwork.Clientes.GetAllAsync();
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        return _mapper.Map<List<ClienteDto>>(clientes);
-    }
-    [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ClienteDto>> Get(int id)
-    {
-        var cliente = await _unitofwork.Clientes.GetByIdAsync(id);
-        if (cliente == null)
-            return NotFound();
-
-        return _mapper.Map<ClienteDto>(cliente);
-    }
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Cliente>> Post(ClienteDto clienteDto)
-    {
-        var cliente = _mapper.Map<Cliente>(clienteDto);
-        _unitofwork.Clientes.Add(cliente);
-        await _unitofwork.SaveAsync();
-        if (cliente == null)
+        public ClienteController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            return BadRequest();
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
-        clienteDto.CodigoCliente = cliente.CodigoCliente;
-        return CreatedAtAction(nameof(Post), new { id = clienteDto.CodigoCliente }, clienteDto);
-    }
-[HttpPut("{id}")]
+
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ClienteDto>> Put(int id, [FromBody] ClienteDto clienteDto)
+        public async Task<ActionResult<IEnumerable<ClienteDto>>> Get()
         {
-            if (clienteDto == null)
-                return NotFound();
+            var clientes = await _unitOfWork.Clientes.GetAllAsync();
 
-            var cliente = await _unitofwork.Clientes.GetByIdAsync(id);
-            if (cliente == null)
-                return NotFound();
-
-            var cliente1 = _mapper.Map<Cliente>(clienteDto);
-            _unitofwork.Clientes.Update(cliente1);
-            await _unitofwork.SaveAsync();
-            return clienteDto;
+            return _mapper.Map<List<ClienteDto>>(clientes);
         }
-        [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ActionResult<ClienteDto>> Get(int id)
         {
-            var cliente = await _unitofwork.Clientes.GetByIdAsync(id);
+            var cliente = await _unitOfWork.Clientes.GetByIdInt(id);
             if (cliente == null)
                 return NotFound();
 
-            _unitofwork.Clientes.Remove(cliente);
-            await _unitofwork.SaveAsync();
-
-            return NoContent();
+            return _mapper.Map<ClienteDto>(cliente);
         }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ClienteDto>> Post(ClienteDto clienteDto)
+        {
+            var cliente = _mapper.Map<Cliente>(clienteDto);
+            _unitOfWork.Clientes.Add(cliente);
+            await _unitOfWork.SaveAsync();
+
+            if (cliente == null)
+            {
+                return BadRequest();
+            }
+
+            clienteDto.CodigoCliente = cliente.CodigoCliente;  // Ajusta según la propiedad de identificación de tu entidad Jefe
+
+            return CreatedAtAction(nameof(Post), new { id = clienteDto.CodigoCliente }, clienteDto);
+        }
+
+
+    }
 }

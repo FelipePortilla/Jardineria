@@ -5,11 +5,6 @@ namespace Domain.entities;
 
 public partial class Oficina:BaseEntity
 {
-    public Oficina()
-    {
-        CodigoOficina=Convert.ToString(id);
-    }
-
     public string CodigoOficina { get; set; } = null!;
 
     public string Ciudad { get; set; } = null!;
@@ -25,6 +20,4 @@ public partial class Oficina:BaseEntity
     public string LineaDireccion1 { get; set; } = null!;
 
     public string LineaDireccion2 { get; set; } = null!;
-
-    public virtual ICollection<Empleado> Empleados { get; set; } = new List<Empleado>();
 }

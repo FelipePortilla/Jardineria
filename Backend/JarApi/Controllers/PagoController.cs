@@ -31,13 +31,43 @@ namespace JarApi.Controllers
             return _mapper.Map<List<PagoDto>>(pagos);
         }
 
+        [HttpGet("clientesConPagosEn2008")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetClientesConPagosEn2008()
+        {
+            try
+            {
+                var clientes = await _unitOfWork.Pagos.GetClientesConPagosEn2008();
+                return Ok(clientes);
+            }
+            catch (Exception ex)
+            {
+                // Log y manejo de errores
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
+        [HttpGet("FormasPagoUnicas")]
+        public async Task<IActionResult> GetFormasPagoUnicas()
+        {
+            try
+            {
+                var formasPago = await _unitOfWork.Pagos.GetFormasPagoUnicas();
+                return Ok(formasPago);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PagoDto>> Get(int id)
         {
-            var pago = await _unitOfWork.Pagos.GetByIdAsync(id);
+            var pago = await _unitOfWork.Pagos.GetByIdInt(id);
             if (pago == null)
                 return NotFound();
 
@@ -73,7 +103,7 @@ namespace JarApi.Controllers
             if (pagoDto == null)
                 return NotFound();
 
-            var pago = await _unitOfWork.Pagos.GetByIdAsync(id);
+            var pago = await _unitOfWork.Pagos.GetByIdInt(id);
             if (pago == null)
                 return NotFound();
 
@@ -89,7 +119,7 @@ namespace JarApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            var pago = await _unitOfWork.Pagos.GetByIdAsync(id);
+            var pago = await _unitOfWork.Pagos.GetByIdInt(id);
             if (pago == null)
                 return NotFound();
 

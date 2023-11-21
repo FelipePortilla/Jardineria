@@ -5,11 +5,6 @@ namespace Domain.entities;
 
 public partial class Pedido:BaseEntity
 {
-    public Pedido()
-    {
-        CodigoPedido=id;
-    }
-
     public int CodigoPedido { get; set; }
 
     public DateTime FechaPedido { get; set; }
