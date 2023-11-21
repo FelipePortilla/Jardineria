@@ -22,6 +22,8 @@ public partial class JardineriaContext : DbContext
 
     public virtual DbSet<Efmigrationshistory> Efmigrationshistories { get; set; }
 
+    public virtual DbSet<Efmigrationshistory> Efmigrationshistories { get; set; }
+
     public virtual DbSet<Empleado> Empleados { get; set; }
 
     public virtual DbSet<GamaProducto> GamaProductos { get; set; }
@@ -320,6 +322,64 @@ public partial class JardineriaContext : DbContext
         modelBuilder.Entity<RefreshToken>(entity =>
         {
             entity.HasKey(e => e.id).HasName("PRIMARY");
+
+            entity.ToTable("refreshtokens");
+
+            entity.HasIndex(e => e.Expires, "IX_RefreshTokens_Expires");
+
+            entity.HasIndex(e => e.Token, "IX_RefreshTokens_Token");
+
+            entity.HasIndex(e => e.UserId, "IX_RefreshTokens_UserId");
+
+            entity.Property(e => e.Created).HasColumnType("datetime");
+            entity.Property(e => e.Expires).HasColumnType("datetime");
+            entity.Property(e => e.Revoked).HasColumnType("datetime");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Refreshtokens)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("refreshtokens_ibfk_1");
+        });
+
+        modelBuilder.Entity<Rol>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("rols");
+
+            entity.Property(e => e.Nombre).HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("users");
+
+            entity.Property(e => e.Email).HasMaxLength(255);
+            entity.Property(e => e.Password).HasMaxLength(255);
+            entity.Property(e => e.Username).HasMaxLength(255);
+
+            entity.HasMany(d => d.Rols).WithMany(p => p.Usuarios)
+                .UsingEntity<Dictionary<string, object>>(
+                    "Userrol",
+                    r => r.HasOne<Rol>().WithMany()
+                        .HasForeignKey("RolId")
+                        .HasConstraintName("userrols_ibfk_2"),
+                    l => l.HasOne<User>().WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .HasConstraintName("userrols_ibfk_1"),
+                    j =>
+                    {
+                        j.HasKey("UsuarioId", "RolId").HasName("PRIMARY");
+                        j.ToTable("userrols");
+                        j.HasIndex(new[] { "RolId" }, "RolId");
+                    });
+        });
+
+        modelBuilder.Entity<Refreshtoken>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.ToTable("refreshtokens");
 

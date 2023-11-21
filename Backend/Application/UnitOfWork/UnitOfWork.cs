@@ -21,9 +21,7 @@ namespace Application.UnitOfWork
         private IPago _pagos;
         private IPedido _pedidos;
         private IProducto _productos;
-        private IRolRepository _roles;
-        private IUserRepository _users;
-        private IJefe _jefes;
+
         public UnitOfWork(JardineriaContext context)
         {
             _context = context;

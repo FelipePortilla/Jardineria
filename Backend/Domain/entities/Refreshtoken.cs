@@ -1,15 +1,23 @@
-﻿
+using System;
+using System.Collections.Generic;
+
 namespace Domain.entities;
 
-public class RefreshToken : BaseEntity
+public partial class Refreshtoken:BaseEntity
 {
-    public int id {get; set;}
+    public int Id { get; set; }
+
     public int UserId { get; set; }
-    public User User { get; set; }
-    public string Token { get; set; }
+
+    public string Token { get; set; } = null!;
+
     public DateTime Expires { get; set; }
-    public bool IsExpired => DateTime.UtcNow >= Expires;
+
     public DateTime Created { get; set; }
+
     public DateTime? Revoked { get; set; }
+    public bool IsExpired => DateTime.UtcNow >= Expires;
+
+    public virtual User User { get; set; } = null!;
     public bool IsActive => Revoked == null && !IsExpired;
 }

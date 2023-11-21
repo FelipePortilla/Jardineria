@@ -20,8 +20,11 @@ namespace Domain.entities
         public string? CodigoPostal { get; set; }
         public decimal? LimiteCredito { get; set; }
 
-        public virtual ICollection<Pago> Pagos { get; set; } = new List<Pago>();
-
-        public ICollection<Pedido> Pedidos {get; set;}= new List<Pedido>();
+    public virtual ICollection<Pago> Pagos { get; set; } = new List<Pago>();
+    public virtual ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
     }
+
+    
+
+    
 }
